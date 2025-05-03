@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #eeeeeb;
+}
+
+.navbar {
+    display: flex;
+    background-color: #3A5DAc;
+    padding: 10px;
+}
+
+.navbar a {
+    color: #eeeeeb;
+    text-decoration: none;
+    padding: 14px 20px;
+}
+
+.navbar a:hover {
+    background-color: #575757;
+}
+
+.dropdown-arrow {
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+
+.dropdown-arrow.open {
+    transform: rotate(90deg);
+}
+
+.workout-section {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff8dc; /* Light yellow for sticky note vibe */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 200px;
+    text-align: center;
+}
+
+.workout-section h2 {
+    font-size: 16px;
+    margin: 0 0 10px;
+}
+
+.workout-section button {
+    margin-top: 5px;
+}
+
+.workout-box {
+    font-size: 14px; /* Slightly smaller font for exercises */
+    display: flex; /* Use flexbox to align items in a single line */
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    max-width: none; /* Allow the box to expand to fit content */
+    word-wrap: normal; /* Prevent wrapping to keep content on one line */
+}
+
+.workout-box button {
+    margin-left: auto; /* Push the button to the right */
+}
