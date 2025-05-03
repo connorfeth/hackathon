@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Progress</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .navbar {
+      background-color: #333;
+      overflow: hidden;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    .navbar a:hover {
+      background-color: #575757;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    .workout-section {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .checkbox-label {
+      display: block;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    #streakCounter {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="AIWorkout.html">AI Tracker</a>
+    <a href="Progress.html">Progress</a>
+  </div>
+
+  <h1>Progress</h1>
+
+  <textarea id="workoutInput" rows="15" placeholder="Paste your full workout here..."></textarea>
+  <button onclick="parseWorkout()">Load Workout</button>
+
+  <div id="streakCounter">🔥 Streak: 0 day(s)</div>
+  <div id="workoutSections"></div>
+
+  <script>
+    function parseWorkout() {
+      const input = document.getElementById("workoutInput").value;
+      const lines = input.split("\n");
+
+      const days = {};
+      let currentDay = null;
+
+      lines.forEach(line => {
+        line = line.trim();
+        const dayMatch = line.match(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/i);
+        if (dayMatch) {
+          currentDay = dayMatch[0];
+          days[currentDay] = [];
+        } else if (currentDay && line.startsWith("•")) {
+          days[currentDay].push(line.slice(1).trim());
+        }
+      });
+
+      localStorage.setItem("parsedWorkoutPlan", JSON.stringify(days));
+      renderWorkout(days);
+    }
+
+    function renderWorkout(plan) {
+      const container = document.getElementById("workoutSections");
+      container.innerHTML = "";
+
+      Object.entries(plan).forEach(([day, exercises]) => {
+        const section = document.createElement("div");
+        section.className = "workout-section";
+
+        const title = document.createElement("h2");
+        title.textContent = day;
+        section.appendChild(title);
+
+        const summary = document.createElement("p");
+        summary.innerHTML = exercises.map(e => "• " + e).join("<br>");
+        section.appendChild(summary);
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        const key = `day-complete-${day}`;
+        checkbox.checked = localStorage.getItem(key) === "true";
+        checkbox.addEventListener("change", () => {
+          localStorage.setItem(key, checkbox.checked);
+          updateStreak();
+        });
+
+        const label = document.createElement("label");
+        label.className = "checkbox-label";
+        label.textContent = "Did you complete this day?";
+        label.prepend(checkbox);
+
+        section.appendChild(label);
+        container.appendChild(section);
+      });
+
+      updateStreak();
+    }
+
+    function updateStreak() {
+      let streak = 0;
+      let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      days.forEach(day => {
+        if (localStorage.getItem(`day-complete-${day}`) === "true") {
+          streak++;
+        }
+      });
+      document.getElementById("streakCounter").textContent = `🔥 Streak: ${streak} day(s)`;
+    }
+
+    // Load previous plan if available
+    window.addEventListener("load", function () {
+      const saved = JSON.parse(localStorage.getItem("parsedWorkoutPlan") || "{}");
+      if (Object.keys(saved).length > 0) {
+        renderWorkout(saved);
+      }
+    });
+  </script>
+</body>
+</html>
