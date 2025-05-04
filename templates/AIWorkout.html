@@ -30,11 +30,9 @@
       </div>
 
       <script>
-        // Save workout plan to localStorage for Progress.html access
         const workoutText = `{{ output | tojson | safe }}`;
         localStorage.setItem("aiWorkoutPlan", workoutText);
 
-        // Optionally parse and store structured workout format
         const parsed = parseWorkoutPlan(workoutText);
         localStorage.setItem("parsedWorkoutPlan", JSON.stringify(parsed));
 
@@ -60,7 +58,7 @@
         const addToProgressButton = document.getElementById('add-to-progress');
 
         addToProgressButton.addEventListener('click', () => {
-            const workoutData = document.querySelector('#chat-output p').textContent; // Get the workout data from the chat output
+            const workoutData = document.querySelector('#chat-output p').textContent; 
 
             if (workoutData) {
                 const savedWorkouts = JSON.parse(localStorage.getItem('parsedWorkoutPlan')) || {};
@@ -71,7 +69,6 @@
 
                 alert('Workout added to Progress!');
 
-                // Redirect to the Progress tab
                 window.location.href = '{{ url_for("progress") }}';
             } else {
                 alert('No workout data available to add.');

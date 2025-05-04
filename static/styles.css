@@ -1,5 +1,5 @@
 body {
-    display: block; /* Revert to default layout */
+    display: block; 
     margin: 0;
     padding: 0;
     background-color: #eeeeeb;
@@ -8,7 +8,7 @@ body {
 
 .navbar {
     display: flex;
-    justify-content: center; /* Center the navigation bar */
+    justify-content: center; 
     background-color: #3A5DAc;
     padding: 10px;
 }
@@ -41,12 +41,12 @@ body {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #fff8dc; /* Light yellow for sticky note vibe */
+    background-color: #fff8dc;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     max-width: 200px;
     text-align: center;
-    height: auto; /* Allow the height to adjust dynamically */
-    min-height: unset; /* Remove unnecessary minimum height */
+    height: auto;
+    min-height: unset; 
 }
 
 .workout-section h2 {
@@ -59,24 +59,24 @@ body {
 }
 
 .workout-box {
-    font-size: 14px; /* Slightly smaller font for exercises */
-    display: flex; /* Use flexbox to align items in a single line */
+    font-size: 14px; 
+    display: flex; 
     align-items: center;
     border: 1px solid #ccc;
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
     background-color: #f9f9f9;
-    max-width: none; /* Allow the box to expand to fit content */
-    word-wrap: normal; /* Prevent wrapping to keep content on one line */
+    max-width: none; 
+    word-wrap: normal;
 }
 
 .workout-box button {
-    margin-left: auto; /* Push the button to the right */
+    margin-left: auto; 
 }
 textarea {
-    width: 100%; /* Make the text area take up the full width */
-    max-width: 800px; /* Set a maximum width for better readability */
+    width: 100%; 
+    max-width: 800px; 
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 15px;
@@ -107,16 +107,16 @@ textarea {
     margin-bottom: 20px;
   }
   .chatbox {
-    position: relative; /* Allow positioning of images */
+    position: relative;
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
+    flex-direction: column; 
     justify-content: center;
     align-items: center;
-    width: 50%; /* Match the width of the center-box */
-    height: auto; /* Allow height to adjust dynamically */
-    padding: 20px; /* Add padding for better spacing */
+    width: 50%;
+    height: auto; 
+    padding: 20px; 
     margin: 0 auto;
-    margin-top: 5%; /* Align with the home page */
+    margin-top: 5%;
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f9f9f9;
@@ -129,64 +129,62 @@ textarea {
     white-space: pre-wrap;
   }
   .exercise-list {
-    position: absolute; /* Position the exercise list absolutely */
-    top: 100%; /* Place it directly below the workout section */
+    position: absolute;
+    top: 100%; 
     left: 0;
-    width: 100%; /* Match the width of the workout section */
-    height: 0; /* Set height to 0 when closed */
-    overflow: hidden; /* Hide content when closed */
-    transition: height 0.3s ease; /* Smooth transition for height */
-    z-index: 1; /* Ensure it appears above other elements */
+    height: 0; 
+    overflow: hidden; 
+    transition: height 0.3s ease; 
+    z-index: 1; 
 }
 
-/* Add this class to control the open/close state */
 .exercise-list.open {
-    height: auto; /* Allow the height to adjust dynamically when open */
+    height: auto; 
 }
 
 .workout-section {
-    position: relative; /* Ensure the workout section is the parent for absolute positioning */
-    display: inline-block; /* Keep the boxes aligned properly */
-    vertical-align: top; /* Align boxes to the top */
+    position: relative; 
+    display: inline-block; 
+    vertical-align: top; 
 }
 .center-box {
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
+    flex-direction: column; 
     justify-content: center;
     align-items: center;
-    width: 50%; /* Reduced width slightly */
-    height: auto; /* Allow height to adjust dynamically */
-    padding: 20px; /* Add padding for better spacing */
+    width: 50%; 
+    height: auto;
+    padding: 20px; 
     margin: 0 auto;
-    margin-top: 5%; /* Adjusted margin to bring the text up */
+    margin-top: 5%; 
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f9f9f9;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-size: 18px;
-    position: relative; /* Allow positioning of images */
+    position: relative; 
 }
 
 .center-box::before, .center-box::after {
     content: '';
     position: absolute;
-    width: 300px; /* Reduced size to 1/3 of the previous dimensions */
-    height: 300px; /* Reduced size to 1/3 of the previous dimensions */
+    width: 300px; 
+    height: 300px;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .center-box::before {
-    background-image: url('/static/image1.jpeg'); /* Corrected path for the left image */
-    left: -350px; /* Move further to the left */
+    background-image: url('/static/image1.jpeg');
+    left: -350px; 
     top: 50%;
     transform: translateY(-50%);
 }
 
 .center-box::after {
-    background-image: url('/static/image2.png'); /* Corrected path for the right image */
-    right: -350px; /* Move further to the right */
+    background-image: url('/static/image2.png'); 
+    right: -350px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -204,7 +202,7 @@ textarea {
             position: absolute;
             width: 333px;
             height: 333px;
-            background-image: url('/static/image1.jpeg'); /* Corrected path for the left image */
+            background-image: url('/static/image1.jpeg'); 
             background-size: cover;
             left: -350px;
             top: 50%;
@@ -216,7 +214,7 @@ textarea {
             position: absolute;
             width: 333px;
             height: 333px;
-            background-image: url('/static/image2.png'); /* Corrected path for the right image */
+            background-image: url('/static/image2.png'); 
             background-size: cover;
             right: -350px;
             top: 50%;
@@ -232,8 +230,8 @@ textarea {
             border-radius: 10px;
             background-color: #f9f9f9;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            width: 100%; /* Make the week container wider */
-            max-width: 600px; /* Increase the maximum width */
+            width: 100%;
+            max-width: 600px; 
         }
 
         .week-container h2 {
@@ -253,37 +251,37 @@ textarea {
         }
         .output {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Create a grid with 4 columns */
-            gap: 20px; /* Add spacing between items */
-            justify-content: center; /* Center the grid within the container */
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px; 
+            justify-content: center;
         }
 
         .week-container {
-            width: 100%; /* Make the week container wider */
-            max-width: 800px; /* Increase the maximum width */
+            width: 100%;
+            max-width: 800px; 
         }
 
         #output {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center the text and box */
+            align-items: center; 
         }
 
         textarea {
             display: block;
-            margin: 0 auto; /* Center the text area */
+            margin: 0 auto;
         }
 
         h1 {
-            text-align: center; /* Center the title */
+            text-align: center; 
         }
 
         button {
             display: block;
-            margin: 10px auto; /* Center the buttons */
+            margin: 10px auto; 
         }
         .week-container div {
-            transition: all 0.3s ease; /* Smooth transition for dropdown */
+            transition: all 0.3s ease; 
         }
 
         .week-container div[style*="display: block"] {
