@@ -1,5 +1,5 @@
-
 body {
+    display: block; /* Revert to default layout */
     margin: 0;
     padding: 0;
     background-color: #eeeeeb;
@@ -75,7 +75,8 @@ body {
     margin-left: auto; /* Push the button to the right */
 }
 textarea {
-    width: 100%;
+    width: 100%; /* Make the text area take up the full width */
+    max-width: 800px; /* Set a maximum width for better readability */
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 15px;
@@ -106,14 +107,25 @@ textarea {
     margin-bottom: 20px;
   }
   .chatbox {
-    background: white;
-    padding: 20px;
+    position: relative; /* Allow positioning of images */
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center;
+    align-items: center;
+    width: 50%; /* Match the width of the center-box */
+    height: auto; /* Allow height to adjust dynamically */
+    padding: 20px; /* Add padding for better spacing */
+    margin: 0 auto;
+    margin-top: 5%; /* Align with the home page */
+    border: 1px solid #ddd;
     border-radius: 10px;
-    max-width: 700px;
-    margin: auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-  #chat-output p {
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 18px;
+}
+
+#chat-output p {
     white-space: pre-wrap;
   }
   .exercise-list {
@@ -166,14 +178,14 @@ textarea {
 }
 
 .center-box::before {
-    background-image: url('image1.jpeg'); /* Replace with your left image path */
+    background-image: url('/static/image1.jpeg'); /* Corrected path for the left image */
     left: -350px; /* Move further to the left */
     top: 50%;
     transform: translateY(-50%);
 }
 
 .center-box::after {
-    background-image: url('image2.png'); /* Replace with your right image path */
+    background-image: url('/static/image2.png'); /* Corrected path for the right image */
     right: -350px; /* Move further to the right */
     top: 50%;
     transform: translateY(-50%);
@@ -186,3 +198,97 @@ textarea {
     color: black;
     font-family: "Orbitron", sans-serif;
 }
+
+.chatbox::before {
+            content: '';
+            position: absolute;
+            width: 333px;
+            height: 333px;
+            background-image: url('/static/image1.jpeg'); /* Corrected path for the left image */
+            background-size: cover;
+            left: -350px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .chatbox::after {
+            content: '';
+            position: absolute;
+            width: 333px;
+            height: 333px;
+            background-image: url('/static/image2.png'); /* Corrected path for the right image */
+            background-size: cover;
+            right: -350px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .week-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Make the week container wider */
+            max-width: 600px; /* Increase the maximum width */
+        }
+
+        .week-container h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .day-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        ul {
+            margin: 5px 0 20px 20px;
+        }
+        .output {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Create a grid with 4 columns */
+            gap: 20px; /* Add spacing between items */
+            justify-content: center; /* Center the grid within the container */
+        }
+
+        .week-container {
+            width: 100%; /* Make the week container wider */
+            max-width: 800px; /* Increase the maximum width */
+        }
+
+        #output {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the text and box */
+        }
+
+        textarea {
+            display: block;
+            margin: 0 auto; /* Center the text area */
+        }
+
+        h1 {
+            text-align: center; /* Center the title */
+        }
+
+        button {
+            display: block;
+            margin: 10px auto; /* Center the buttons */
+        }
+        .week-container div {
+            transition: all 0.3s ease; /* Smooth transition for dropdown */
+        }
+
+        .week-container div[style*="display: block"] {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }

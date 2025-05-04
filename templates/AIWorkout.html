@@ -3,69 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <title>AI Workout</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-    }
-    .navbar {
-      background-color: #333;
-      overflow: hidden;
-      border-radius: 6px;
-      margin-bottom: 20px;
-    }
-    .navbar a {
-      float: left;
-      display: block;
-      color: white;
-      text-align: center;
-      padding: 14px 16px;
-      text-decoration: none;
-    }
-    .navbar a:hover {
-      background-color: #575757;
-    }
-    .chatbox {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 700px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      padding: 10px 20px;
-      margin-top: 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-    #chat-output p {
-      white-space: pre-wrap;
-    }
-  </style>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="navbar">
-    <a href="{{ url_for('home') }}">Home</a>
-    <a href="{{ url_for('workout') }}">AI Tracker</a>
-    <a href="{{ url_for('progress') }}">Progress</a>
+    <a href="/">Home</a>
+        <a href="/AIWorkout">Fitness AI</a>
+        <a href="/Progress">Progress</a>
   </div>
 
-  <div class="chatbox">
+  <h1 class="title">HerosPhysique</h1>
+  <div class="chatbox" style="margin-top: 5%;">
     <h2>AI Fitness Coach 💪</h2>
     <form method="POST">
       <label for="character">Enter your favorite anime character:</label>
-      <input type="text" id="character" name="character" placeholder="e.g. Goku, Levi, etc." required>
+      <input type="text" id="character" name="character" placeholder="e.g. Goku, Toji, etc." required>
       <button type="submit">Generate Workout</button>
     </form>
 
@@ -103,6 +56,27 @@
 
           return days;
         }
+
+        const addToProgressButton = document.getElementById('add-to-progress');
+
+        addToProgressButton.addEventListener('click', () => {
+            const workoutData = document.querySelector('#chat-output p').textContent; // Get the workout data from the chat output
+
+            if (workoutData) {
+                const savedWorkouts = JSON.parse(localStorage.getItem('parsedWorkoutPlan')) || {};
+                const currentDate = new Date().toLocaleDateString();
+
+                savedWorkouts[currentDate] = workoutData.split('\n').map(line => line.trim());
+                localStorage.setItem('parsedWorkoutPlan', JSON.stringify(savedWorkouts));
+
+                alert('Workout added to Progress!');
+
+                // Redirect to the Progress tab
+                window.location.href = '{{ url_for("progress") }}';
+            } else {
+                alert('No workout data available to add.');
+            }
+        });
       </script>
     {% endif %}
   </div>
