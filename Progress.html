@@ -5,206 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Webpage</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .workout-box {
-            display: inline-block;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            max-width: 300px;
-            word-wrap: break-word;
-        }
-        .workout-box button {
-            margin-top: 10px;
-        }
-        .workout-section {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fafafa;
-        }
-        .exercise-list {
-            margin-top: 10px;
-        }
-        .dropdown-arrow {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            margin-left: 5px;
-            transition: transform 0.3s;
-        }
-        .dropdown-arrow.open {
-            transform: rotate(90deg);
-        }
-    </style>
 </head>
 <body>
-    <div class="navbar">
-        <a href="home.html">Home</a>
-        <a href="AIWorkout.html">AI Tracker</a>
-        <a href="Progress.html">Progress</a>
-    </div>
-    <div>
-        <h1>Progress</h1>
-        <form id="workoutForm">
-            <label for="workout">Workout Name:</label>
-            <input type="text" id="workoutName" name="workoutName" required>
-            <button type="submit">Add Workout</button>
-        </form>
-        <div id="workoutSections"></div>
-    </div>
-    <script>
-        const workoutForm = document.getElementById('workoutForm');
-        const workoutSections = document.getElementById('workoutSections');
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="AIWorkout.html">AI Tracker</a>
+    <a href="Progress.html">Progress</a>
+  </div>
 
-        // Load saved workouts from localStorage
-        window.addEventListener('load', function() {
-            const savedWorkouts = JSON.parse(localStorage.getItem('workoutSections')) || [];
-            savedWorkouts.forEach((workout, index) => {
-                addWorkoutSection(workout, index);
-            });
+  <h1>Progress</h1>
+
+  <textarea id="workoutInput" rows="15" placeholder="Paste your full workout here..."></textarea>
+  <button onclick="parseWorkout()">Load Workout</button>
+
+  <div id="streakCounter">🔥 Streak: 0 day(s)</div>
+  <div id="workoutSections"></div>
+
+  <script>
+    function parseWorkout() {
+      const input = document.getElementById("workoutInput").value;
+      const lines = input.split("\n");
+
+      const days = {};
+      let currentDay = null;
+
+      lines.forEach(line => {
+        line = line.trim();
+        const dayMatch = line.match(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/i);
+        if (dayMatch) {
+          currentDay = dayMatch[0];
+          days[currentDay] = [];
+        } else if (currentDay && line.startsWith("•")) {
+          days[currentDay].push(line.slice(1).trim());
+        }
+      });
+
+      localStorage.setItem("parsedWorkoutPlan", JSON.stringify(days));
+      renderWorkout(days);
+    }
+
+    function renderWorkout(plan) {
+      const container = document.getElementById("workoutSections");
+      container.innerHTML = "";
+
+      Object.entries(plan).forEach(([day, exercises]) => {
+        const section = document.createElement("div");
+        section.className = "workout-section";
+
+        const title = document.createElement("h2");
+        title.textContent = day;
+        section.appendChild(title);
+
+        const summary = document.createElement("p");
+        summary.innerHTML = exercises.map(e => "• " + e).join("<br>");
+        section.appendChild(summary);
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        const key = `day-complete-${day}`;
+        checkbox.checked = localStorage.getItem(key) === "true";
+        checkbox.addEventListener("change", () => {
+          localStorage.setItem(key, checkbox.checked);
+          updateStreak();
         });
 
-        workoutForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const workoutNameInput = document.getElementById('workoutName');
-            const workoutName = workoutNameInput.value.trim();
+        const label = document.createElement("label");
+        label.className = "checkbox-label";
+        label.textContent = "Did you complete this day?";
+        label.prepend(checkbox);
 
-            if (workoutName) {
-                const currentDate = new Date().toLocaleDateString();
-                const newWorkout = { name: workoutName, date: currentDate, exercises: [] };
-                const savedWorkouts = JSON.parse(localStorage.getItem('workoutSections')) || [];
-                savedWorkouts.push(newWorkout);
-                localStorage.setItem('workoutSections', JSON.stringify(savedWorkouts));
+        section.appendChild(label);
+        container.appendChild(section);
+      });
 
-                addWorkoutSection(newWorkout, savedWorkouts.length - 1);
+      updateStreak();
+    }
 
-                workoutNameInput.value = '';
-            }
-        });
-
-        function addWorkoutSection(workout, index) {
-            const section = document.createElement('div');
-            section.className = 'workout-section';
-
-            const header = document.createElement('h2');
-            header.textContent = `${workout.name} - ${workout.date}`;
-            header.style.cursor = 'pointer';
-
-            const arrow = document.createElement('span');
-            arrow.className = 'dropdown-arrow';
-            arrow.textContent = '▶';
-            header.appendChild(document.createTextNode(' ')); // Add space between date and arrow
-            header.appendChild(arrow);
-
-            const exerciseContainer = document.createElement('div');
-            exerciseContainer.style.display = 'none';
-
-            header.addEventListener('click', function() {
-                exerciseContainer.style.display = exerciseContainer.style.display === 'none' ? 'block' : 'none';
-                arrow.classList.toggle('open');
-            });
-
-            const removeWorkoutButton = document.createElement('button');
-            removeWorkoutButton.textContent = 'Remove Workout';
-            removeWorkoutButton.style.marginLeft = '10px';
-            removeWorkoutButton.addEventListener('click', function() {
-                removeWorkout(index);
-            });
-
-            header.appendChild(removeWorkoutButton);
-
-            const exerciseForm = document.createElement('form');
-            exerciseForm.innerHTML = `
-                <label for="exercise">Exercise:</label>
-                <input type="text" name="exercise" required>
-                <label for="weight">Weight (lbs):</label>
-                <input type="number" name="weight" required>
-                <label for="reps">Reps:</label>
-                <input type="number" name="reps" required>
-                <button type="submit">Add Exercise</button>
-            `;
-
-            const exerciseList = document.createElement('div');
-            exerciseList.className = 'exercise-list';
-
-            exerciseForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const exerciseInput = exerciseForm.querySelector('input[name="exercise"]');
-                const weightInput = exerciseForm.querySelector('input[name="weight"]');
-                const repsInput = exerciseForm.querySelector('input[name="reps"]');
-
-                const exercise = exerciseInput.value.trim();
-                const weight = weightInput.value.trim();
-                const reps = repsInput.value.trim();
-
-                if (exercise && weight && reps) {
-                    const savedWorkouts = JSON.parse(localStorage.getItem('workoutSections')) || [];
-                    const currentWorkout = savedWorkouts[index];
-                    currentWorkout.exercises.push({ exercise, weight, reps });
-                    localStorage.setItem('workoutSections', JSON.stringify(savedWorkouts));
-
-                    addExerciseToList(exerciseList, { exercise, weight, reps }, index, currentWorkout.exercises.length - 1);
-
-                    exerciseInput.value = '';
-                    weightInput.value = '';
-                    repsInput.value = '';
-                }
-            });
-
-            section.appendChild(header);
-            section.appendChild(removeWorkoutButton);
-            exerciseContainer.appendChild(exerciseForm);
-            exerciseContainer.appendChild(exerciseList);
-            section.appendChild(exerciseContainer);
-            workoutSections.appendChild(section);
-
-            // Load existing exercises
-            workout.exercises.forEach((ex, exIndex) => {
-                addExerciseToList(exerciseList, ex, index, exIndex);
-            });
+    function updateStreak() {
+      let streak = 0;
+      let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      days.forEach(day => {
+        if (localStorage.getItem(`day-complete-${day}`) === "true") {
+          streak++;
         }
+      });
+      document.getElementById("streakCounter").textContent = `🔥 Streak: ${streak} day(s)`;
+    }
 
-        function addExerciseToList(exerciseList, exercise, workoutIndex, exerciseIndex) {
-            const exerciseBox = document.createElement('div');
-            exerciseBox.className = 'workout-box';
-            exerciseBox.textContent = `${exercise.exercise} - ${exercise.weight} lbs - ${exercise.reps} reps`;
-
-            const removeExerciseButton = document.createElement('button');
-            removeExerciseButton.textContent = 'Remove Exercise';
-            removeExerciseButton.addEventListener('click', function() {
-                removeExercise(workoutIndex, exerciseIndex);
-            });
-
-            exerciseBox.appendChild(removeExerciseButton);
-            exerciseList.appendChild(exerciseBox);
-        }
-
-        function removeWorkout(index) {
-            const savedWorkouts = JSON.parse(localStorage.getItem('workoutSections')) || [];
-            savedWorkouts.splice(index, 1);
-            localStorage.setItem('workoutSections', JSON.stringify(savedWorkouts));
-
-            workoutSections.innerHTML = '';
-            savedWorkouts.forEach((workout, idx) => {
-                addWorkoutSection(workout, idx);
-            });
-        }
-
-        function removeExercise(workoutIndex, exerciseIndex) {
-            const savedWorkouts = JSON.parse(localStorage.getItem('workoutSections')) || [];
-            const currentWorkout = savedWorkouts[workoutIndex];
-            currentWorkout.exercises.splice(exerciseIndex, 1);
-            localStorage.setItem('workoutSections', JSON.stringify(savedWorkouts));
-
-            workoutSections.innerHTML = '';
-            savedWorkouts.forEach((workout, idx) => {
-                addWorkoutSection(workout, idx);
-            });
-        }
-    </script>
+    // Load previous plan if available
+    window.addEventListener("load", function () {
+      const saved = JSON.parse(localStorage.getItem("parsedWorkoutPlan") || "{}");
+      if (Object.keys(saved).length > 0) {
+        renderWorkout(saved);
+      }
+    });
+  </script>
 </body>
 </html>

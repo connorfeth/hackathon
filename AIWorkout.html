@@ -1,19 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Webpage</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>AI Workout</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="navbar">
-        <a href="home.html">Home</a>
-        <a href="AIWorkout.html">AI Tracker</a>
-        <a href="Progress.html">Progress</a>
-    </div>
-    <div>
-        <h1>AI</h1>
-    </div>
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="AIWorkout.html">AI Tracker</a>
+    <a href="Progress.html">Progress</a>
+  </div>
+
+  <div class="chatbox">
+    <h2>AI Fitness Coach 💪</h2>
+    <div id="chat-output"></div>
+    <textarea id="user-input" rows="3" placeholder="Describe your fitness goals..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("user-input").value.trim();
+      if (!input) return;
+
+      const chatOutput = document.getElementById("chat-output");
+      chatOutput.innerHTML += `<p><strong>You:</strong> ${input}</p>`;
+
+      const res = await fetch("http://127.0.0.1:5000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: input })
+      });
+
+      const data = await res.json();
+      chatOutput.innerHTML += `<p><strong>AI:</strong> ${data.reply}</p>`;
+      document.getElementById("user-input").value = "";
+
+      localStorage.setItem("aiWorkoutPlan", data.reply);
+      const structuredPlan = parseWorkoutPlan(data.reply);
+      localStorage.setItem("parsedWorkoutPlan", JSON.stringify(structuredPlan));
+    }
+
+    function parseWorkoutPlan(text) {
+      const days = {};
+      const lines = text.split("\n");
+      let currentDay = null;
+
+      lines.forEach(line => {
+        line = line.trim();
+        const dayMatch = line.match(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/i);
+        if (dayMatch) {
+          currentDay = dayMatch[0];
+          days[currentDay] = [];
+        } else if (currentDay && line.startsWith("•")) {
+          days[currentDay].push(line.slice(1).trim());
+        }
+      });
+
+      return days;
+    }
+  </script>
 </body>
 </html>

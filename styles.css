@@ -1,12 +1,14 @@
+
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #eeeeeb;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .navbar {
     display: flex;
+    justify-content: center; /* Center the navigation bar */
     background-color: #3A5DAc;
     padding: 10px;
 }
@@ -43,6 +45,8 @@ body {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     max-width: 200px;
     text-align: center;
+    height: auto; /* Allow the height to adjust dynamically */
+    min-height: unset; /* Remove unnecessary minimum height */
 }
 
 .workout-section h2 {
@@ -69,4 +73,116 @@ body {
 
 .workout-box button {
     margin-left: auto; /* Push the button to the right */
+}
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+  button {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  .workout-section {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  }
+  .checkbox-label {
+    display: block;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  #streakCounter {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .chatbox {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 700px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  #chat-output p {
+    white-space: pre-wrap;
+  }
+  .exercise-list {
+    position: absolute; /* Position the exercise list absolutely */
+    top: 100%; /* Place it directly below the workout section */
+    left: 0;
+    width: 100%; /* Match the width of the workout section */
+    height: 0; /* Set height to 0 when closed */
+    overflow: hidden; /* Hide content when closed */
+    transition: height 0.3s ease; /* Smooth transition for height */
+    z-index: 1; /* Ensure it appears above other elements */
+}
+
+/* Add this class to control the open/close state */
+.exercise-list.open {
+    height: auto; /* Allow the height to adjust dynamically when open */
+}
+
+.workout-section {
+    position: relative; /* Ensure the workout section is the parent for absolute positioning */
+    display: inline-block; /* Keep the boxes aligned properly */
+    vertical-align: top; /* Align boxes to the top */
+}
+.center-box {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center;
+    align-items: center;
+    width: 50%; /* Reduced width slightly */
+    height: auto; /* Allow height to adjust dynamically */
+    padding: 20px; /* Add padding for better spacing */
+    margin: 0 auto;
+    margin-top: 5%; /* Adjusted margin to bring the text up */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 18px;
+    position: relative; /* Allow positioning of images */
+}
+
+.center-box::before, .center-box::after {
+    content: '';
+    position: absolute;
+    width: 300px; /* Reduced size to 1/3 of the previous dimensions */
+    height: 300px; /* Reduced size to 1/3 of the previous dimensions */
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.center-box::before {
+    background-image: url('image1.jpeg'); /* Replace with your left image path */
+    left: -350px; /* Move further to the left */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.center-box::after {
+    background-image: url('image2.png'); /* Replace with your right image path */
+    right: -350px; /* Move further to the right */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.title {
+    text-align: center;
+    font-size: 36px;
+    margin-top: 20px;
+    color: black;
+    font-family: "Orbitron", sans-serif;
 }
