@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Workout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .navbar {
+      background-color: #333;
+      overflow: hidden;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    .navbar a:hover {
+      background-color: #575757;
+    }
+    .chatbox {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    #chat-output p {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('workout') }}">AI Tracker</a>
+    <a href="{{ url_for('progress') }}">Progress</a>
+  </div>
+
+  <div class="chatbox">
+    <h2>AI Fitness Coach 💪</h2>
+    <form method="POST">
+      <label for="character">Enter your favorite anime character:</label>
+      <input type="text" id="character" name="character" placeholder="e.g. Goku, Levi, etc." required>
+      <button type="submit">Generate Workout</button>
+    </form>
+
+    {% if output %}
+      <hr>
+      <h3>Workout Plan for {{ character }}</h3>
+      <div id="chat-output">
+        <p>{{ output }}</p>
+      </div>
+
+      <script>
+        // Save workout plan to localStorage for Progress.html access
+        const workoutText = `{{ output | tojson | safe }}`;
+        localStorage.setItem("aiWorkoutPlan", workoutText);
+
+        // Optionally parse and store structured workout format
+        const parsed = parseWorkoutPlan(workoutText);
+        localStorage.setItem("parsedWorkoutPlan", JSON.stringify(parsed));
+
+        function parseWorkoutPlan(text) {
+          const days = {};
+          const lines = text.split("\\n");
+          let currentDay = null;
+
+          lines.forEach(line => {
+            line = line.trim();
+            const match = line.match(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/i);
+            if (match) {
+              currentDay = match[0];
+              days[currentDay] = [];
+            } else if (currentDay && line.startsWith("•")) {
+              days[currentDay].push(line.slice(1).trim());
+            }
+          });
+
+          return days;
+        }
+      </script>
+    {% endif %}
+  </div>
+</body>
+</html>
+

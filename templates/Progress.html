@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<<<<<<< HEAD:Progress.html
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Webpage</title>
+    <link rel="stylesheet" href="styles.css">
+=======
+  <meta charset="UTF-8" />
+  <title>Progress</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .navbar {
+      background-color: #333;
+      overflow: hidden;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    .navbar a:hover {
+      background-color: #575757;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .workout-section {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .complete-btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .complete-btn.yes {
+      background-color: #28a745;
+      color: white;
+    }
+    .complete-btn.no {
+      background-color: #ccc;
+      color: #333;
+    }
+    .week-toggle {
+      cursor: pointer;
+      padding: 10px;
+      background-color: #e0e0e0;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    .week-toggle:hover {
+      background-color: #ccc;
+    }
+    #streakCounter {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+  </style>
+>>>>>>> 0bbaf53 (working ai tracker):templates/Progress.html
+</head>
+<body>
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="AIWorkout.html">AI Tracker</a>
+    <a href="Progress.html">Progress</a>
+  </div>
+
+  <h1>Progress</h1>
+
+  <textarea id="workoutInput" rows="15" placeholder="Paste your full workout here..."></textarea>
+  <button onclick="parseWorkout()">Load Workout</button>
+
+  <div id="streakCounter">🔥 Streak: 0 day(s)</div>
+  <div id="workoutSections"></div>
+
+  <script>
+    let weekCount = 0;
+  
+    function parseWorkout() {
+      const input = document.getElementById("workoutInput").value;
+      const lines = input.split("\n");
+  
+      const days = {};
+      let currentDay = null;
+  
+      lines.forEach(line => {
+        line = line.trim();
+        const dayMatch = line.match(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/i);
+        if (dayMatch) {
+          currentDay = dayMatch[0];
+          days[currentDay] = [];
+        } else if (currentDay && line.startsWith("•")) {
+          days[currentDay].push(line.slice(1).trim());
+        }
+      });
+  
+      weekCount++;
+      const key = `parsedWorkoutPlan-week-${weekCount}`;
+      localStorage.setItem(key, JSON.stringify(days));
+      renderWorkout(days, weekCount);
+    }
+  
+    function renderWorkout(plan, weekNum) {
+      const container = document.getElementById("workoutSections");
+  
+      const toggle = document.createElement("div");
+      toggle.className = "week-toggle";
+      toggle.textContent = `Week ${weekNum}`;
+      const sectionWrapper = document.createElement("div");
+      sectionWrapper.style.display = "none";
+  
+      toggle.addEventListener("click", () => {
+        sectionWrapper.style.display = sectionWrapper.style.display === "none" ? "block" : "none";
+      });
+  
+      container.appendChild(toggle);
+      container.appendChild(sectionWrapper);
+  
+      Object.entries(plan).forEach(([day, exercises]) => {
+        const section = document.createElement("div");
+        section.className = "workout-section";
+  
+        const title = document.createElement("h2");
+        title.textContent = day;
+        section.appendChild(title);
+  
+        const summary = document.createElement("p");
+        summary.innerHTML = exercises.map(e => "• " + e).join("<br>");
+        section.appendChild(summary);
+  
+        const key = `week-${weekNum}-day-${day}`;
+        const btn = document.createElement("button");
+        const isComplete = localStorage.getItem(key) !== "false"; // default to YES
+        btn.textContent = isComplete ? "Yes" : "No";
+        btn.className = "complete-btn " + (isComplete ? "yes" : "no");
+  
+        btn.addEventListener("click", () => {
+          const newState = btn.textContent === "Yes" ? false : true;
+          localStorage.setItem(key, newState);
+          btn.textContent = newState ? "Yes" : "No";
+          btn.className = "complete-btn " + (newState ? "yes" : "no");
+          updateStreak();
+        });
+  
+        section.appendChild(btn);
+        sectionWrapper.appendChild(section);
+      });
+  
+      updateStreak();
+    }
+  
+    function updateStreak() {
+      let total = 0;
+      Object.keys(localStorage).forEach(k => {
+        if (k.startsWith("week-") && localStorage.getItem(k) !== "false") {
+          total++;
+        }
+      });
+      document.getElementById("streakCounter").textContent = `🔥 Streak: ${total} day(s)`;
+    }
+  
+    window.addEventListener("load", () => {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("parsedWorkoutPlan-week-")) {
+          const weekNum = key.split("-").pop();
+          const plan = JSON.parse(localStorage.getItem(key));
+          renderWorkout(plan, weekNum);
+        }
+      });
+    });
+  </script>  
+</body>
+</html>
